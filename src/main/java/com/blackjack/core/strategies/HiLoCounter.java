@@ -7,7 +7,7 @@ public class HiLoCounter implements Strategy {
     private final int maxBet;
     private final FlatBasicStrategy basicStrategy;
 
-    public HiLoCounter(int maxBet, int minBet){
+    public HiLoCounter(int minBet, int maxBet){
         this.maxBet = maxBet;
         this.minBet = minBet;
         this.basicStrategy = new FlatBasicStrategy(minBet);

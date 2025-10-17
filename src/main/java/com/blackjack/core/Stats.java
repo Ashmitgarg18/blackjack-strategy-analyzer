@@ -1,5 +1,6 @@
 package com.blackjack.core;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.LongAdder;
 
 public class Stats {
@@ -12,6 +13,9 @@ public class Stats {
     private final LongAdder playerBusts = new LongAdder();
     private final LongAdder dealerBusts = new LongAdder();
     private final LongAdder netUnits = new LongAdder();
+    private final LongAdder totalBet = new LongAdder();
+
+    private final ConcurrentHashMap<Integer, LongAdder> trueCountFrequency = new ConcurrentHashMap<>();
 
     public void incrementHands() { hands.increment(); }
     public void incrementWins() { wins.increment(); }
@@ -21,6 +25,11 @@ public class Stats {
     public void incrementPlayerBusts() { playerBusts.increment(); }
     public void incrementDealerBusts() { dealerBusts.increment(); }
     public void addNetUnits(long units) { netUnits.add(units); }
+    public void addTotalBet(long bet) { totalBet.add(bet); }
+
+    public void recordTrueCount(int tc) {
+        trueCountFrequency.computeIfAbsent(tc, k -> new LongAdder()).increment();
+    }
 
     public long getHands() { return hands.sum(); }
     public long getWins() { return wins.sum(); }
@@ -30,7 +39,11 @@ public class Stats {
     public long getPlayerBusts() { return playerBusts.sum(); }
     public long getDealerBusts() { return dealerBusts.sum(); }
     public long getNetUnits() { return netUnits.sum(); }
+    public long getTotalBet() { return totalBet.sum(); }
 
+    public ConcurrentHashMap<Integer, LongAdder> getTrueCountFrequency() {
+        return trueCountFrequency;
+    }
 
     public void merge(Stats other) {
         this.hands.add(other.getHands());
@@ -41,5 +54,10 @@ public class Stats {
         this.playerBusts.add(other.getPlayerBusts());
         this.dealerBusts.add(other.getDealerBusts());
         this.netUnits.add(other.getNetUnits());
+        this.totalBet.add(other.getTotalBet());
+
+        other.getTrueCountFrequency().forEach((tc, count) ->
+                this.trueCountFrequency.computeIfAbsent(tc, k -> new LongAdder()).add(count.sum())
+        );
     }
 }

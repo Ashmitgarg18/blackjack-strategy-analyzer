@@ -2,23 +2,21 @@ package com.blackjack.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.*;
 import java.util.random.RandomGenerator;
 
 public class Simulator {
 
-    private Simulator(){};
+    private Simulator() {}
 
-    public static Stats run(SimulationConfig config, Strategy strategy, int threads, long seed){
+    public static Stats run(SimulationConfig config, Strategy strategy, int threads, long seed) {
         ExecutorService pool = Executors.newFixedThreadPool(threads);
-
         List<Future<Stats>> futures = new ArrayList<>();
 
         int per = config.getRounds() / threads;
         int rem = config.getRounds() % threads;
 
-        for(int t = 0; t < threads; t++){
+        for (int t = 0; t < threads; t++) {
             int roundsForThread = per + (t < rem ? 1 : 0);
             final long threadSeed = seed + t * 97_373L;
             futures.add(pool.submit(() -> runChunk(config, strategy, roundsForThread, threadSeed)));
@@ -27,7 +25,7 @@ public class Simulator {
         pool.shutdown();
 
         Stats total = new Stats();
-        for(Future<Stats> future: futures){
+        for (Future<Stats> future : futures) {
             try {
                 total.merge(future.get());
             } catch (ExecutionException e) {
@@ -39,28 +37,30 @@ public class Simulator {
         }
 
         return total;
-
     }
 
     private static Stats runChunk(SimulationConfig cfg, Strategy strategy, int rounds, long seed) {
 
         RandomGenerator rng = java.util.random.RandomGeneratorFactory
-                .of("L4X128MixRandom")
+                .of("L64X128MixRandom")
                 .create(seed);
 
         Shoe shoe = new Shoe(cfg.getNumberOfDecks(), cfg.getPenetration(), rng);
-
         GameRules rules = cfg.getRules();
-
         Stats stats = new Stats();
 
         int runningCount = 0;
 
-        for(int i = 0; i < rounds; i++){
+        for (int i = 0; i < rounds; i++) {
             Hand player = new Hand();
             Hand dealer = new Hand();
 
+            if (shoe.wasJustShuffled()) {
+                runningCount = 0;
+            }
+
             Card p1 = shoe.deal();
+
             runningCount += hiloDelta(p1);
             player.addCard(p1);
 
@@ -78,51 +78,56 @@ public class Simulator {
 
             stats.incrementHands();
 
-            int trueCount = runningCount / Math.max(1, cfg.getNumberOfDecks());
+            int cardsUntilShuffle = shoe.getCardsUntilShuffle();
+            int decksRemaining = Math.max(1, (cardsUntilShuffle + 51) / 52);
+            int trueCount = runningCount / decksRemaining;
+
+            stats.recordTrueCount(trueCount);
+
             GameState state = new GameState(trueCount, rules);
 
-            int betUnits = Math.max(cfg.getMinBet(), strategy.betSize(state));
+            int betUnits = strategy.betSize(state);
+            if (betUnits < cfg.getMinBet()) {
+                betUnits = cfg.getMinBet();
+            }
+
+            stats.addTotalBet(betUnits);
 
             boolean playerBlackjack = player.isBlackjack();
             boolean dealerBlackjack = dealer.isBlackjack();
 
-            if(playerBlackjack || dealerBlackjack){
-
-                if(playerBlackjack && !dealerBlackjack){
+            if (playerBlackjack || dealerBlackjack) {
+                if (playerBlackjack && !dealerBlackjack) {
                     stats.incrementBlackjacks();
                     stats.incrementWins();
-//                    stats.addNetUnits((long) Math.round(rules.blackjackPayout()));
                     stats.addNetUnits((long) Math.round(betUnits * rules.blackjackPayout()));
                 } else if (!playerBlackjack && dealerBlackjack) {
                     stats.incrementLosses();
-//                    stats.addNetUnits(-1L);
                     stats.addNetUnits(-betUnits);
-                }
-                else{
+                } else {
                     stats.incrementPushes();
                 }
-
                 continue;
-
             }
 
             boolean canDouble = true;
             boolean finished = false;
 
-            while(!finished){
+            while (!finished) {
                 Action action = strategy.decide(player, dealer.getCards().get(0), state, canDouble, false, false);
 
-                switch (action){
-                    case STAND -> finished = true;
+                switch (action) {
+                    case STAND -> {
+                        finished = true;
+                    }
 
                     case HIT -> {
                         Card c = shoe.deal();
                         runningCount += hiloDelta(c);
                         player.addCard(c);
-
                         canDouble = false;
 
-                        if(player.isBust()){
+                        if (player.isBust()) {
                             stats.incrementPlayerBusts();
                             stats.incrementLosses();
                             stats.addNetUnits(-betUnits);
@@ -133,11 +138,9 @@ public class Simulator {
                     case DOUBLE -> {
                         if (canDouble) {
                             betUnits *= 2;
-
                             Card c = shoe.deal();
                             runningCount += hiloDelta(c);
                             player.addCard(c);
-
                             canDouble = false;
                             finished = true;
 
@@ -147,16 +150,17 @@ public class Simulator {
                                 stats.addNetUnits(-betUnits);
                             }
                         } else {
+                            // treat as HIT
                             Card c = shoe.deal();
                             runningCount += hiloDelta(c);
                             player.addCard(c);
-
                             canDouble = false;
 
                             if (player.isBust()) {
                                 stats.incrementPlayerBusts();
                                 stats.incrementLosses();
                                 stats.addNetUnits(-betUnits);
+                                finished = true;
                             }
                         }
                     }
@@ -164,27 +168,29 @@ public class Simulator {
                     default -> {
                         finished = true;
                     }
-
                 }
-
             }
 
-            if(player.isBust()){
+            if (player.isBust()) {
                 continue;
             }
 
-            while(true){
+            boolean dealerResolved = false;
+
+            while (true) {
                 int dealerValue = dealer.bestValue();
                 boolean dealerSoft = dealer.isSoft();
 
-                if(dealerValue > 21){
+                if (dealerValue > 21) {
                     stats.incrementDealerBusts();
                     stats.incrementWins();
                     stats.addNetUnits(betUnits);
+                    dealerResolved = true;
                     break;
                 }
 
-                if (dealerValue > 17 || (dealerValue == 17 && (!rules.dealerHitsSoft17() || !dealerSoft))) {
+                if (dealerValue > 17
+                        || (dealerValue == 17 && (!rules.dealerHitsSoft17() || !dealerSoft))) {
                     break;
                 }
 
@@ -193,24 +199,25 @@ public class Simulator {
                 dealer.addCard(c);
             }
 
+            if (dealerResolved) {
+                continue;
+            }
+
             int playerValue = player.bestValue();
             int dealerValue = dealer.bestValue();
 
-            if(playerValue > dealerValue){
+            if (playerValue > dealerValue) {
                 stats.incrementWins();
                 stats.addNetUnits(betUnits);
             } else if (dealerValue > playerValue) {
                 stats.incrementLosses();
                 stats.addNetUnits(-betUnits);
-            }
-            else{
+            } else {
                 stats.incrementPushes();
             }
-
         }
 
         return stats;
-
     }
 
     private static int hiloDelta(Card c) {
@@ -220,5 +227,4 @@ public class Simulator {
             default -> -1;
         };
     }
-
 }
