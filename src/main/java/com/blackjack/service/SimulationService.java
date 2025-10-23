@@ -6,8 +6,11 @@ import com.blackjack.persistence.entity.SimulationResultEntity;
 import com.blackjack.persistence.repo.SimulationResultRepository;
 import com.blackjack.service.StrategyFactory.StrategyType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,6 +22,15 @@ import java.util.Map;
 
 @Service
 public class SimulationService {
+
+    @Value("${spring.datasource.url}")
+    private String url;
+
+    @Value("${spring.datasource.username}")
+    private String user;
+
+    @Value("${spring.datasource.password}")
+    private String pwd;
 
     private final SimulationResultRepository simulationResultRepository;
 

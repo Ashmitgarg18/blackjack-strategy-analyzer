@@ -5,7 +5,11 @@ public record GameRules(
         double blackjackPayout,
         boolean doubleAfterSplit,
         boolean surrenderAllowed,
-        int maxSplits
+        int maxSplits,
+        boolean allowSplit,
+        boolean allowResplit,
+        boolean allowSplitAces,
+        int maxHandsAfterSplit
 ) {
     public static GameRules standard(){
         return new GameRules(
@@ -13,7 +17,11 @@ public record GameRules(
                 1.5,
                 true,
                 false,
-                3
+                3,
+                true,
+                false,
+                false,
+                4
         );
     }
 }

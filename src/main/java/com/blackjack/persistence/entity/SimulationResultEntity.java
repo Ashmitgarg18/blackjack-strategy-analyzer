@@ -24,7 +24,7 @@ public class SimulationResultEntity {
 
     private double penetration;
 
-    @Column(columnDefinition = "jsonb")
+    @Column
     private String rules;
 
     private long hands;

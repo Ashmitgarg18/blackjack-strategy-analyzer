@@ -5,5 +5,7 @@ public enum Action {
     STAND,
     DOUBLE,
     SPLIT,
-    SURRENDER
+    SURRENDER,
+    INSURANCE,
+    NONE
 }
