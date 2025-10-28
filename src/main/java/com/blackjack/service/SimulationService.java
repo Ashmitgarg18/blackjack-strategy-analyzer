@@ -4,12 +4,15 @@ import com.blackjack.api.dto.*;
 import com.blackjack.core.*;
 import com.blackjack.persistence.entity.SimulationResultEntity;
 import com.blackjack.persistence.repo.SimulationResultRepository;
+import com.blackjack.security.AuthUserPrincipal;
 import com.blackjack.service.StrategyFactory.StrategyType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -87,6 +90,12 @@ public class SimulationService {
         );
 
         SimulationResultEntity entity = toEntity(response);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof AuthUserPrincipal principal) {
+            entity.setUserId(principal.getUserId());
+        }
+
         simulationResultRepository.save(entity);
 
         return response;

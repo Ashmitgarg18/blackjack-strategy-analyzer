@@ -16,6 +16,8 @@ public class SimulationResultEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
+
     private String strategyName;
 
     private int rounds;

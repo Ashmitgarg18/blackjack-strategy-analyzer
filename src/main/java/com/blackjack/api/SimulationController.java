@@ -7,6 +7,7 @@ import com.blackjack.api.dto.SimulationSummaryDTO;
 import com.blackjack.service.SimulationService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class SimulationController {
     }
 
     @PostMapping("/simulate")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<SimulationResponse> simulate(@Valid @RequestBody SimulationRequest request) {
         SimulationResponse resp = service.runSimulation(request);
         return ResponseEntity.ok(resp);
