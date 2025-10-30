@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 export default function ThemeToggle() {
@@ -21,7 +21,6 @@ export default function ThemeToggle() {
     <button
       onClick={() => setDarkMode(!darkMode)}
       className="p-2 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
-      title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
     >
       {darkMode ? (
         <Sun className="h-5 w-5 text-yellow-400" />

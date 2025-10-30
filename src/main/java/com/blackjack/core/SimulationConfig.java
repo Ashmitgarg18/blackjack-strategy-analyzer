@@ -50,7 +50,7 @@ public class SimulationConfig {
     public static SimulationConfig defaultConfig() {
         return new SimulationConfig(
                 1_000_000,
-                1,
+                8,
                 0.75,
                 GameRules.standard(),
                 100_000,
