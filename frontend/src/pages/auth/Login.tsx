@@ -15,7 +15,7 @@ export default function Login() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      const response = await fetch("http://localhost:8081/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -37,7 +37,7 @@ export default function Login() {
   return (
     <div className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 w-96">
-        <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6 text-gray-900 dark:text-gray-100">Login</h2>
 
         {error && (
           <div className="text-red-500 text-sm text-center mb-4">{error}</div>
@@ -51,7 +51,7 @@ export default function Login() {
               name="username"
               value={form.username}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               required
             />
           </div>
@@ -63,7 +63,7 @@ export default function Login() {
               name="password"
               value={form.password}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               required
             />
           </div>

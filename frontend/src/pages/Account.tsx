@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User, Lock, LogOut } from "lucide-react";
+import { Lock, LogOut } from "lucide-react";
 
 export default function Account() {
   const [form, setForm] = useState({
@@ -32,7 +32,7 @@ export default function Account() {
     <div className="space-y-8">
       {/* Title */}
       <div>
-        <h2 className="text-2xl font-semibold mb-2">Account</h2>
+        <h2 className="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Account</h2>
         <p className="text-gray-500 dark:text-gray-400">
           Manage your profile, authentication, and app preferences.
         </p>
@@ -42,10 +42,10 @@ export default function Account() {
       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-4 mb-4">
           <div className="h-12 w-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-xl font-bold">
-            {form.username[0].toUpperCase()}
+            {form.username[0]?.toUpperCase?.()}
           </div>
           <div>
-            <p className="text-lg font-semibold">{form.username}</p>
+            <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{form.username}</p>
             <p className="text-gray-500 dark:text-gray-400">{form.email}</p>
           </div>
         </div>
@@ -64,7 +64,7 @@ export default function Account() {
               name="username"
               value={form.username}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-[#141413] text-gray-900 dark:text-gray-100"
             />
           </div>
           <div>
@@ -73,27 +73,31 @@ export default function Account() {
               name="email"
               value={form.email}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-[#141413] text-gray-900 dark:text-gray-100"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">New Password</label>
+            <label className="block text-sm font-medium mb-1">
+              New Password
+            </label>
             <input
               name="password"
               type="password"
               value={form.password}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-[#141413] text-gray-900 dark:text-gray-100"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Confirm Password</label>
+            <label className="block text-sm font-medium mb-1">
+              Confirm Password
+            </label>
             <input
               name="confirmPassword"
               type="password"
               value={form.confirmPassword}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-[#141413] text-gray-900 dark:text-gray-100"
             />
           </div>
         </div>
@@ -120,7 +124,7 @@ export default function Account() {
 
       {/* Preferences */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-        <h3 className="text-lg font-semibold mb-4">Preferences</h3>
+        <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Preferences</h3>
         <p className="text-gray-500 dark:text-gray-400">
           Coming soon — theme, notifications, and more.
         </p>

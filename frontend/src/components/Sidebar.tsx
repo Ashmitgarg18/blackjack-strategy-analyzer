@@ -12,8 +12,8 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-gray-900 text-gray-100 flex flex-col">
-      <div className="p-4 text-xl font-bold border-b border-gray-700">
+    <aside className="w-64 bg-white dark:bg-[#141413] text-gray-900 dark:text-gray-100 flex flex-col border-r border-gray-200 dark:border-gray-700">
+      <div className="p-4 text-xl font-bold border-b border-gray-200 dark:border-gray-700">
         ♠ Blackjack Lab
       </div>
       <nav className="flex-1 p-2 space-y-1">
@@ -23,8 +23,8 @@ export default function Sidebar() {
             to={link.path}
             className={`flex items-center gap-2 p-3 rounded-lg transition ${
               location.pathname === link.path
-                ? "bg-gray-700"
-                : "hover:bg-gray-800"
+                ? "bg-gray-200 dark:bg-gray-700"
+                : "hover:bg-gray-100 dark:hover:bg-gray-800"
             }`}
           >
             {link.icon}

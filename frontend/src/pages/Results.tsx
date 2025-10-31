@@ -68,7 +68,7 @@ export default function Results() {
     <div className="space-y-8">
       {/* Page Title */}
       <div>
-        <h2 className="text-2xl font-semibold mb-2">Results</h2>
+        <h2 className="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Results</h2>
         <p className="text-gray-500 dark:text-gray-400">
           View, filter, and analyze your past simulations.
         </p>
@@ -83,12 +83,12 @@ export default function Results() {
             placeholder="Search strategy..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900"
+            className="w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
           />
         </div>
         <button
           onClick={() => setSortAsc(!sortAsc)}
-          className="flex items-center gap-1 text-sm px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+          className="flex items-center gap-1 text-sm px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-900 dark:text-gray-100"
         >
           <ArrowUpDown size={14} />
           Sort
@@ -118,9 +118,9 @@ export default function Results() {
                     : "bg-white dark:bg-gray-800"
                 } hover:bg-gray-100 dark:hover:bg-gray-700 transition`}
               >
-                <td className="px-4 py-3 font-medium">{result.strategy}</td>
-                <td className="px-4 py-3">{result.rounds.toLocaleString()}</td>
-                <td className="px-4 py-3">{result.decks}</td>
+                <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">{result.strategy}</td>
+                <td className="px-4 py-3 text-gray-900 dark:text-gray-100">{result.rounds.toLocaleString()}</td>
+                <td className="px-4 py-3 text-gray-900 dark:text-gray-100">{result.decks}</td>
                 <td
                   className={`px-4 py-3 ${
                     result.ev.startsWith("+")

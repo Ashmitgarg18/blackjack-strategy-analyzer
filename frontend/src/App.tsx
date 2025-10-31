@@ -7,6 +7,7 @@ import Results from "./pages/Results";
 import Account from "./pages/Account";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import type { JSX } from "react";
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const token = localStorage.getItem("token");
@@ -26,7 +27,7 @@ export default function App() {
           path="/*"
           element={
             <PrivateRoute>
-              <div className="flex h-screen bg-gray-100 dark:bg-gray-900 dark:text-white">
+              <div className="flex h-screen bg-gray-100 dark:bg-[#141413] text-gray-900 dark:text-gray-100">
                 <Sidebar />
                 <div className="flex flex-col flex-1">
                   <Topbar />

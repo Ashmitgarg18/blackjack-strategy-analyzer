@@ -24,7 +24,7 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/register", {
+      const response = await fetch("http://localhost:8081/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -46,7 +46,7 @@ export default function Register() {
   return (
     <div className="flex h-screen items-center justify-center bg-gray-100 dark:bg-gray-900">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 w-96">
-        <h2 className="text-2xl font-semibold text-center mb-6">Register</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6 text-gray-900 dark:text-gray-100">Register</h2>
 
         {error && (
           <div className="text-red-500 text-sm text-center mb-4">{error}</div>
@@ -60,7 +60,7 @@ export default function Register() {
               name="username"
               value={form.username}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               required
             />
           </div>
@@ -72,7 +72,7 @@ export default function Register() {
               name="password"
               value={form.password}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               required
             />
           </div>
@@ -86,7 +86,7 @@ export default function Register() {
               name="confirmPassword"
               value={form.confirmPassword}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               required
             />
           </div>
